@@ -42,10 +42,8 @@ const Deposit = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
-      onUpdate()
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveSuccess(chainId, receipt.transactionHash))
-
     } catch (error) {
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveError(chainId, error))
@@ -77,10 +75,8 @@ const Deposit = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
-      onUpdate()
       dispatch(dropNotificationGroup('deposits'))
       dispatch(depositSuccess(chainId, receipt.transactionHash))
-
     } catch (error) {
       setIsPending(false)
       dispatch(dropNotificationGroup('deposits'))

@@ -44,6 +44,27 @@ const VaultsRowSkeleton = () => (
       <Grid item xs>
         <Typography><Skeleton /></Typography>
       </Grid>
+      <Grid item xs>
+        <Typography><Skeleton /></Typography>
+      </Grid>
+      <Grid item xs>
+        <Typography><Skeleton /></Typography>
+      </Grid>
+      <Grid item xs>
+        <Typography><Skeleton /></Typography>
+      </Grid>
+      <Grid item xs>
+        <Typography><Skeleton /></Typography>
+      </Grid>
+    </Grid>
+
+    <Grid container spacing={3} sx={{ mt: 2 }}>
+      <Grid item xs>
+        <Typography><Skeleton /></Typography>
+      </Grid>
+      <Grid item xs>
+        <Typography><Skeleton /></Typography>
+      </Grid>
     </Grid>
   </Card>
 )

@@ -54,10 +54,8 @@ const Withdraw = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
-      onUpdate()
       dispatch(dropNotificationGroup('withdraws'))
       dispatch(withdrawSuccess(chainId, receipt.transactionHash))
-
     } catch (error) {
       setIsPending(false)
       dispatch(dropNotificationGroup('withdraws'))

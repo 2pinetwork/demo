@@ -51,7 +51,15 @@ const TxLink = ({ chainId, hash, children }) => {
   const explorerUrl = getBlockExplorerUrl(chainId)
   const url         = `${explorerUrl}tx/${hash}`
 
-  return <Link href={url} target="_blank" rel="noreferrer">{children}</Link>
+  return (
+    <Link href={url}
+          color="inherit"
+          target="_blank"
+          rel="noreferrer"
+          sx={{ fontWeight: 'bold' }}>
+      {children}
+    </Link>
+  )
 }
 
 TxLink.propTypes = {
