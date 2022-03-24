@@ -1,7 +1,8 @@
+import React from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import { Box, Grid, Typography } from '@mui/material'
-import Card from '@/components/Card'
+import { Card, Notifications } from '@/components'
 import Layout from '@/features/shared/Layout'
 import Vaults from '@/features/assets/Vaults'
 import { useVaults } from '@/features/assets/utils/vaults'
@@ -12,7 +13,7 @@ const Assets = () => {
   return (
     <Layout>
       <Head>
-        <title>2PI</title>
+        <title>2PI - Demo dApp</title>
       </Head>
 
       <Box component="header" sx={{ display: 'flex', justifyContent: 'space-between', mb: 6 }}>
@@ -36,6 +37,8 @@ const Assets = () => {
       </Box>
 
       <Vaults vaults={vaults} />
+
+      <Notifications />
     </Layout>
   )
 }

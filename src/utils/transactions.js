@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import { Link } from '@mui/material'
 import { getBlockExplorerUrl } from '@/data/networks'
 import { notify, notifySuccess, notifyError } from '@/store/notifications'
 
@@ -50,7 +51,7 @@ const TxLink = ({ chainId, hash, children }) => {
   const explorerUrl = getBlockExplorerUrl(chainId)
   const url         = `${explorerUrl}tx/${hash}`
 
-  return <a href={url} target="_blank" rel="noreferrer">{children}</a>
+  return <Link href={url} target="_blank" rel="noreferrer">{children}</Link>
 }
 
 TxLink.propTypes = {

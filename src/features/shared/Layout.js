@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import Image from 'next/image'
 import { AppBar, Box, Container, Toolbar } from '@mui/material'
-import { Notifications, Link, WalletButton } from '@/components'
+import { Link, WalletButton } from '@/components'
 
 const Logo = () => (
   <Image src="/images/2pi_dark.svg" alt="2PI" width="98" height="56" unoptimized />
@@ -28,8 +28,6 @@ const Layout = ({ children }) => (
 
     <Container maxWidth="lg" sx={{ mt: 6 }}>
       {children}
-
-      <Notifications />
     </Container>
   </Box>
 )

@@ -1,23 +1,30 @@
 import PropTypes from 'prop-types'
+import { useState } from 'react'
 import { Alert, Snackbar, Stack } from '@mui/material'
 import { useStore, dropNotification } from '@/store'
 
 export const Notifications = () => {
   const [ { notifications }, dispatch ] = useStore()
+  const [ open, setOpen ]               = useState(true)
 
   // Just to follow Material Design guidelines, we do not stack
   if (notifications.length) {
-    const { id, type, message } = notifications.pop()
+    const { id, type, message } = notifications[notifications.length - 1]
 
     const onClose = (event, reason) => {
       if (! ['escapeKeyDown', 'clickaway'].includes(reason)) {
-        dispatch(dropNotification(id))
+        setOpen(false)
+
+        setTimeout(() => {
+          dispatch(dropNotification(id))
+          setOpen(true)
+        }, 1000)
       }
     }
 
     return (
       <Stack spacing={2}>
-        <Notification key={id} type={type} message={message} onClose={onClose} />
+        <Notification key={id} open={open} type={type} message={message} onClose={onClose} />
       </Stack>
     )
   } else {
@@ -27,11 +34,10 @@ export const Notifications = () => {
 
 export default Notifications
 
-const Notification = ({ type, message, onClose }) => (
-  <Snackbar open={true}
+const Notification = ({ type, open, message, onClose }) => (
+  <Snackbar open={open}
             key={message}
             onClose={onClose}
-            autoHideDuration={10 * 60 * 1000}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
     <Alert variant="filled" severity={type} onClose={onClose} sx={{ width: '100%' }}>
       {message}
@@ -41,6 +47,7 @@ const Notification = ({ type, message, onClose }) => (
 
 Notification.propTypes = {
   type:    PropTypes.string.isRequired,
+  open:    PropTypes.bool.isRequired,
   message: PropTypes.node.isRequired,
   onClose: PropTypes.func.isRequired
 }
