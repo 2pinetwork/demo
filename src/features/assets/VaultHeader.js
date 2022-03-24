@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types'
 import { Grid, Typography } from '@mui/material'
-import { toCurrency, toNumber, toPercentage } from '@/lib/locales'
+import { toNumber, toPercentage } from '@/lib/locales'
 import { toHuman } from '@/lib/math'
 import { capitalize } from '@/lib/string'
 import Logo from './Logo'
 
 const VaultHeader = ({ vault }) => {
-  const { balance, deposited, protocol, token, apy, tvl } = vault
+  const { balance, deposited, protocol, token, apy } = vault
 
   return (
     <Grid container spacing={1}>
@@ -65,15 +65,6 @@ const VaultHeader = ({ vault }) => {
         </Typography>
         <Typography component="div" variant="body2" align="center" color="grey.400">
           Daily
-        </Typography>
-      </Grid>
-
-      <Grid item xs>
-        <Typography component="div" align="center" variant="body1" sx={{ fontWeight: 'bold' }}>
-          {toCurrency(tvl)}
-        </Typography>
-        <Typography component="div" variant="body2" align="center" color="grey.400">
-          TA
         </Typography>
       </Grid>
     </Grid>
