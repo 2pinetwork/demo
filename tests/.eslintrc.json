@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "plugin:jest/style",
+    "plugin:testing-library/react"
+  ]
+}
