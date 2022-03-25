@@ -26,8 +26,8 @@ const abbreviateAddress = address => {
 }
 
 const buttonLabel = ({ isConnecting, wallet }) => {
-  if (! wallet)     return 'Connect wallet'
-  if (isConnecting) return 'Connecting...'
+  if (! wallet?.address)  return 'Connect wallet'
+  if (isConnecting)       return 'Connecting...'
 
   return abbreviateAddress(wallet.address)
 }

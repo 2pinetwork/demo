@@ -4,7 +4,7 @@
 
 export const polygonMainnet = {
   chainId:   `0x${parseInt(137).toString(16)}`,
-  chainName: 'Polygon Mainnet',
+  chainName: 'Polygon',
   nativeCurrency: {
     name:     'MATIC',
     symbol:   'MATIC',

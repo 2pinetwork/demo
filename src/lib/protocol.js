@@ -10,7 +10,9 @@ export const getPrices = async chainId => {
 }
 
 export const getVaults = (chainId, wallet) => {
-  return getClient(chainId, wallet).getVaults()
+  if (networks[chainId]) {
+    return getClient(chainId, wallet).getVaults()
+  }
 }
 
 

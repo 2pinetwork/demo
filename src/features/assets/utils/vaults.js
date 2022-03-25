@@ -14,6 +14,7 @@ export const useVaults = () => {
     getVaults(wallet).then(result => {
       dispatch(vaultsLoaded(result, order))
     })
+    // We don't want dispatch complains here =)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet])
 

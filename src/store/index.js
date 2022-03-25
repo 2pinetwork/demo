@@ -97,6 +97,18 @@ export const reducer = (state, action) => {
       return { ...state, vaults }
     }
 
+    case 'WALLET_ADDRESS': {
+      const wallet = { ...state.wallet, address: action.payload }
+
+      return { ...state, wallet }
+    }
+
+    case 'WALLET_CHAIN_ID': {
+      const wallet = { ...state.wallet, chainId: action.payload }
+
+      return { ...state, wallet }
+    }
+
     default: {
       console.error('UNKNOWN ACTION', action)
 
@@ -127,6 +139,14 @@ export const dropNotification = id => {
 
 export const dropNotificationGroup = group => {
   return { type: 'DROP_NOTIFICATION_GROUP', payload: group }
+}
+
+export const addressChanged = address => {
+  return { type: 'WALLET_ADDRESS', payload: address }
+}
+
+export const chainChanged = chainId => {
+  return { type: 'WALLET_CHAIN_ID', payload: chainId }
 }
 
 export const vaultsLoaded = (vaults, order) => {

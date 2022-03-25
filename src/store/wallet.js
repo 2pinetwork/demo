@@ -8,7 +8,7 @@ export const connectAsync = () => {
     dispatch(connecting())
 
     try {
-      const wallet = await createSession()
+      const wallet = await createSession(dispatch)
       dispatch(connection(wallet))
 
     } catch (error) {
