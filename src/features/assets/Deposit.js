@@ -96,7 +96,7 @@ const Deposit = ({ vault }) => {
   return (
     <React.Fragment>
       <Typography component="div" variant="body1" color="grey.400">
-        Balance ({balance ? toNumber(toHuman(balance, vault.tokenDecimals), { precision: 4 }) : '-'} {vault.token.toUpperCase()})
+        Balance ({balance ? toNumber(toHuman(balance, vault.tokenDecimals), { precision: 6 }) : '-'} {vault.token.toUpperCase()})
       </Typography>
 
       <Box component="div" sx={{ mt: 2 }}>

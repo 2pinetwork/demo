@@ -31,7 +31,7 @@ const VaultHeader = ({ vault }) => {
           ${balance ? toNumber(toHuman(balance, vault.tokenDecimals), { precision: 2 }) : '-'}
         </Typography>
         <Typography component="div" variant="body2" align="center" color="primary.main">
-          {balance ? toNumber(toHuman(balance, vault.tokenDecimals), { precision: 4 }) : '-'}
+          {balance ? toNumber(toHuman(balance, vault.tokenDecimals), { precision: 6 }) : '-'}
         </Typography>
         <Typography component="div" variant="body2" align="center" color="grey.400">
           Balance
@@ -43,7 +43,7 @@ const VaultHeader = ({ vault }) => {
           ${deposited ? toNumber(toHuman(deposited, vault.decimals), { precision: 2 }) : '-'}
         </Typography>
         <Typography component="div" variant="body2" align="center" color="primary.main">
-          {deposited ? toNumber(toHuman(deposited, vault.decimals), { precision: 4 }) : '-'}
+          {deposited ? toNumber(toHuman(deposited, vault.decimals), { precision: 6 }) : '-'}
         </Typography>
         <Typography component="div" variant="body2" align="center" color="grey.400">
           Deposited

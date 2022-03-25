@@ -66,7 +66,7 @@ const Withdraw = ({ vault }) => {
   return (
     <React.Fragment>
       <Typography component="div" variant="body1" color="grey.400">
-        Deposited ({deposited ? toNumber(toHuman(deposited, vault.decimals), { precision: 4 }) : '-'} {vault.token.toUpperCase()})
+        Deposited ({deposited ? toNumber(toHuman(deposited, vault.decimals), { precision: 6 }) : '-'} {vault.token.toUpperCase()})
       </Typography>
 
       <Box component="div" sx={{ mt: 2 }}>
