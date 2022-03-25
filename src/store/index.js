@@ -45,7 +45,11 @@ Provider.propTypes = {
 export const initialState = {
   wallet:        undefined,
   isConnecting:  false,
-  notifications: []
+  notifications: [],
+  vaults:        {
+    order: 0,
+    value: undefined
+  }
 }
 
 
@@ -82,6 +86,17 @@ export const reducer = (state, action) => {
       return { ...state, notifications }
     }
 
+    case 'VAULTS_LOADED': {
+      const vaults = state.vaults
+
+      if (vaults.order < action.payload.order) {
+        vaults.order = action.payload.order
+        vaults.value = action.payload.vaults
+      }
+
+      return { ...state, vaults }
+    }
+
     default: {
       console.error('UNKNOWN ACTION', action)
 
@@ -112,4 +127,8 @@ export const dropNotification = id => {
 
 export const dropNotificationGroup = group => {
   return { type: 'DROP_NOTIFICATION_GROUP', payload: group }
+}
+
+export const vaultsLoaded = (vaults, order) => {
+  return { type: 'VAULTS_LOADED', payload: { vaults, order } }
 }

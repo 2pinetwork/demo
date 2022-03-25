@@ -1,17 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { getVaults } from '@/data/vaults'
-import { useStore } from '@/store'
+import { useStore, vaultsLoaded } from '@/store'
 
 // [TODO]
 // - Update vaults on a loop (refresh)
 // - Cache vaults
 export const useVaults = () => {
-  const [ vaults, setVaults ] = useState()
-  const [ state ]             = useStore()
+  const [ { wallet, vaults }, dispatch ] = useStore()
 
   useEffect(() => {
-    getVaults(state.wallet).then(setVaults)
-  }, [state])
+    const order = Date.now()
 
-  return vaults
+    getVaults(wallet).then(result => {
+      dispatch(vaultsLoaded(result, order))
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet])
+
+  return vaults?.value
 }
