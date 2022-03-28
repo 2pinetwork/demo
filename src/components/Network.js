@@ -59,7 +59,7 @@ const Network = () => {
           </Grid>
 
           <Grid item xs>
-            <Box component="p" sx={{ m: 0 }}>
+            <Box component="p" sx={{ m: 0, pt: { xs: 0.5, md: 0 } }}>
               {networkName}
             </Box>
           </Grid>
