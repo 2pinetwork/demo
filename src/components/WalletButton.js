@@ -10,7 +10,7 @@ const WalletButton = () => {
             color="primary"
             size="small"
             onClick={buttonAction(state, dispatch)}
-            sx={{ pb: 1 }}>
+            sx={{ typography: 'small1' }}>
       {buttonLabel(state)}
     </Button>
   )

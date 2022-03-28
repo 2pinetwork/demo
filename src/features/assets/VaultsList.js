@@ -6,7 +6,7 @@ import VaultHeader from './VaultHeader'
 
 const VaultsList = ({ vaults }) => {
   return (
-    <Box component="div">
+    <Box component="div" sx={{ mb: 6 }}>
       { (vaults)
           ? vaults.map(v => <VaultRow key={v.identifier} vault={v} />)
           : [...Array(1)].map((_, i) => <VaultsRowSkeleton key={i} />)
