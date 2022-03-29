@@ -123,7 +123,7 @@ const nativeAmount = (vault, amount) => {
   const { decimals, sharePrice } = vault
   const price                    = sharePrice.toString()
   const precision                = toBigNumber(10).pow(decimals.toString())
-  const shares                   = toBigNumber(amount).times(price).div(precision)
+  const shares                   = toBigNumber(amount).div(price).times(precision)
 
   return toNative(shares, decimals)
 }
