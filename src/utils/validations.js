@@ -1,7 +1,7 @@
 export const isNumber =
   RegExp.prototype.test.bind(/^\d+\.?\d*$/)
 
-export const unsafeHasEnoughtFunds = async (vault, amount) => {
+export const unsafeHasEnoughtFunds = (vault, amount) => {
   if (vault.token === 'matic') {
     amount = (+amount) + 0.025
   }
@@ -9,7 +9,7 @@ export const unsafeHasEnoughtFunds = async (vault, amount) => {
   return vault.balance.gte(amount)
 }
 
-export const validateDeposit = async (vault, amount) => {
+export const validateDeposit = (vault, amount) => {
   if (! isNumber(amount)) {
     return 'Must be a number.'
   }
@@ -18,7 +18,7 @@ export const validateDeposit = async (vault, amount) => {
     return 'Must be greater than zero.'
   }
 
-  if (! await unsafeHasEnoughtFunds(vault, amount)) {
+  if (! unsafeHasEnoughtFunds(vault, amount)) {
     return (vault.token === 'matic')
       ? 'You don’t have enough funds (MATIC requires extra 0.025 to deposit).'
       : 'You don’t have enough funds.'

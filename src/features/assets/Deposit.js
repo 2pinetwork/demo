@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { toNumber } from '@/lib/locales'
 import { toBigNumber, toHuman, toNative } from '@/lib/math'
+import { onUpdate } from '@/features/assets/utils/vaults'
 import { dropNotificationGroup, useStore } from '@/store'
 import { notifySuccess } from '@/store/notifications'
 import { txSent, txSuccess, txError } from '@/utils/transactions'
-import { validateDeposit } from '@/utils/validations'
+import { isNumber, validateDeposit } from '@/utils/validations'
 import Max from './Max'
 import {
   Box,
@@ -43,12 +44,12 @@ const Deposit = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
+      onUpdate(wallet, dispatch)
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveSuccess(chainId, receipt.transactionHash))
     } catch (error) {
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveError(chainId, error))
-
     } finally {
       setIsPending(false)
     }
@@ -57,7 +58,7 @@ const Deposit = ({ vault }) => {
   const onDeposit = async () => {
     const chainId = vault.chainId
     const amount  = nativeAmount(vault, value)
-    const error   = await validateDeposit(vault, amount)
+    const error   = validateDeposit(vault, amount)
 
     // Update the displayed error message and abort if there's an error
     setError(error)
@@ -76,6 +77,7 @@ const Deposit = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
+      onUpdate(wallet, dispatch)
       dispatch(dropNotificationGroup('deposits'))
       dispatch(depositSuccess(chainId, receipt.transactionHash))
     } catch (error) {
@@ -118,7 +120,7 @@ const Deposit = ({ vault }) => {
       <Button variant="contained"
               color="primary"
               size="small"
-              disabled={!wallet || isDisabled}
+              disabled={! wallet || isDisabled || ! isNumber(value)}
               fullWidth
               onClick={onSubmit}
               sx={{ mt: 2, py: 1 }}>
@@ -151,7 +153,7 @@ const isTokenApproved = ({
     const precision = toBigNumber(10).pow(tokenDecimals.toString())
     const amount    = toBigNumber(value).times(precision)
 
-    return amount.isPositive() && allowance?.gte(amount.toString())
+    return amount.isPositive() && allowance?.gte(amount.toFixed(0))
   } else {
     return allowance?.gte(balance)
   }

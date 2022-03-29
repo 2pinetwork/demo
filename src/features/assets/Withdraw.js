@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { toNumber } from '@/lib/locales'
 import { toBigNumber, toHuman, toNative } from '@/lib/math'
+import { onUpdate } from '@/features/assets/utils/vaults'
 import { dropNotificationGroup, useStore } from '@/store'
 import { txSent, txSuccess, txError } from '@/utils/transactions'
 import { validateWithdraw } from '@/utils/validations'
@@ -54,6 +55,7 @@ const Withdraw = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
+      onUpdate(wallet, dispatch)
       dispatch(dropNotificationGroup('withdraws'))
       dispatch(withdrawSuccess(chainId, receipt.transactionHash))
     } catch (error) {
