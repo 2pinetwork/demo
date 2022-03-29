@@ -28,7 +28,7 @@ const VaultHeader = ({ vault }) => {
 
       <Grid item xs={6} md>
         <Typography component="div" variant="body2" color="grey.400" sx={{ textAlign: { xs: 'left', md: 'center' } }}>
-          ${balance ? toNumber(toHuman(balance, vault.tokenDecimals), { precision: 2 }) : '-'}
+          ${balance ? toNumber(toHuman(balance, vault.tokenDecimals).times(vault.tokenPrice), { precision: 2 }) : '-'}
         </Typography>
         <Typography component="div" variant="body2" color="primary.main" sx={{ textAlign: { xs: 'left', md: 'center' } }}>
           {balance ? toNumber(toHuman(balance, vault.tokenDecimals), { precision: 6 }) : '-'}
@@ -40,7 +40,7 @@ const VaultHeader = ({ vault }) => {
 
       <Grid item xs={6} md>
         <Typography component="div" variant="body2" color="grey.400" sx={{ textAlign: { xs: 'left', md: 'center' } }}>
-          ${deposited ? toNumber(toHuman(deposited, vault.decimals), { precision: 2 }) : '-'}
+          ${deposited ? toNumber(toHuman(deposited, vault.decimals).times(vault.tokenPrice), { precision: 2 }) : '-'}
         </Typography>
         <Typography component="div" variant="body2" color="primary.main" sx={{ textAlign: { xs: 'left', md: 'center' } }}>
           {deposited ? toNumber(toHuman(deposited, vault.decimals), { precision: 6 }) : '-'}
