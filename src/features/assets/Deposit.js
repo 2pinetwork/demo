@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { toNumber } from '@/lib/locales'
-import { toHuman, toNative } from '@/lib/math'
+import { toBigNumber, toHuman, toNative } from '@/lib/math'
 import { dropNotificationGroup, useStore } from '@/store'
+import { notifySuccess } from '@/store/notifications'
 import { txSent, txSuccess, txError } from '@/utils/transactions'
 import { validateDeposit } from '@/utils/validations'
 import Max from './Max'
@@ -22,8 +23,8 @@ const Deposit = ({ vault }) => {
   const [ isPending, setIsPending ] = useState(false)
   const { balance }                 = vault
 
-  const isApproved = isTokenApproved(vault)
   const isDisabled = isPending || typeof vault.approve !== 'function'
+  const isApproved = isTokenApproved(vault, value)
 
   const buttonLabel = (isApproved)
     ? (isPending ? 'Depositing...' : 'Deposit')
@@ -105,7 +106,7 @@ const Deposit = ({ vault }) => {
                          value={value}
                          size="small"
                          endAdornment={<Max onClick={onMax} />}
-                         disabled={!isApproved || isDisabled}
+                         disabled={isDisabled}
                          onChange={onChange}
                          error={!!error}
                          fullWidth
@@ -137,10 +138,23 @@ export default Deposit
 
 // -- HELPERS --
 
-const isTokenApproved = ({ chainId, token, allowance, balance }) => {
+const isTokenApproved = ({
+  chainId,
+  token,
+  tokenDecimals,
+  allowance,
+  balance
+}, value) => {
   if ([ 137, 80001 ].includes(chainId) && token === 'matic') return true
 
-  return allowance?.gt(balance)
+  if (value) {
+    const precision = toBigNumber(10).pow(tokenDecimals.toString())
+    const amount    = toBigNumber(value).times(precision)
+
+    return amount.isPositive() && allowance?.gte(amount.toString())
+  } else {
+    return allowance?.gte(balance)
+  }
 }
 
 const approveSent = (chainId, hash) => {
