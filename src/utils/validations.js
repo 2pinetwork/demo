@@ -36,7 +36,7 @@ export const validateWithdraw = (vault, amount) => {
     return 'Must be greater than zero.'
   }
 
-  if (vault.deposited.lt(amount)) {
+  if (vault.shares.lt(amount)) {
     return 'Can’t be more than your deposits.'
   }
 

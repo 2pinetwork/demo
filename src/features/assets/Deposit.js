@@ -22,6 +22,7 @@ const Deposit = ({ vault }) => {
   const [ value, setValue ]         = useState('')
   const [ error, setError ]         = useState()
   const [ isPending, setIsPending ] = useState(false)
+  const [ useMax, setUseMax ]       = useState(false)
   const { balance }                 = vault
 
   const isDisabled = isPending || typeof vault.approve !== 'function'
@@ -68,9 +69,10 @@ const Deposit = ({ vault }) => {
 
     try {
       const referral    = localStorage.getItem('referral')
-      const transaction = await deposit(vault, value, referral)
+      const transaction = await deposit(vault, value, referral, useMax)
 
       setValue('')
+      setUseMax(false)
       setIsPending(false)
       dispatch(dropNotificationGroup('deposits'))
       dispatch(depositSent(chainId, transaction.hash))
@@ -87,13 +89,18 @@ const Deposit = ({ vault }) => {
     }
   }
 
-  const onMax = (event) => {
+  const onMax = event => {
     event.preventDefault()
 
     setValue(toNumber(toHuman(balance, vault.tokenDecimals), { precision: vault.tokenDecimals }))
+    setUseMax(true)
   }
 
-  const onChange = ({ target }) => setValue(target.value)
+  const onChange = ({ target }) => {
+    setValue(target.value)
+    setUseMax(false)
+  }
+
   const onSubmit = (isApproved) ? onDeposit : onApprove
 
   return (
@@ -197,8 +204,12 @@ const approve = async (vault, amount) => {
   return await vault.approve(amountNative)
 }
 
-const deposit = async (vault, amount, referral) => {
-  const amountNative = nativeAmount(vault, amount)
+const deposit = async (vault, amount, referral, useMax) => {
+  if (useMax) {
+    return await vault.depositAll(referral)
+  } else {
+    const amountNative = nativeAmount(vault, amount)
 
-  return await vault.deposit(amountNative, referral)
+    return await vault.deposit(amountNative, referral)
+  }
 }

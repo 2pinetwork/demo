@@ -17,22 +17,18 @@ import {
 } from '@mui/material'
 
 const Withdraw = ({ vault }) => {
-  const [ {}, dispatch ]                     = useStore()
-  const [ value, setValue ]                  = useState('')
-  const [ error, setError ]                  = useState()
-  const [ isPending, setIsPending ]          = useState(false)
-  const { deposited }                        = vault
+  const [ { wallet }, dispatch ]    = useStore()
+  const [ value, setValue ]         = useState('')
+  const [ error, setError ]         = useState()
+  const [ isPending, setIsPending ] = useState(false)
+  const [ useMax, setUseMax ]       = useState(false)
+  const { deposited }               = vault
 
   const isDisabled = isPending || typeof vault.withdraw !== 'function'
 
   const buttonLabel = (isPending)
     ? 'Withdrawing...'
     : 'Withdraw'
-
-  const onChange = ({ target }) => setValue(target.value)
-  const onMax    = () => setValue(
-    toNumber(toHuman(deposited, vault.decimals), { precision: vault.decimals.toNumber() })
-  )
 
   const onSubmit = async () => {
     const chainId = vault.chainId
@@ -46,9 +42,10 @@ const Withdraw = ({ vault }) => {
     setIsPending(true)
 
     try {
-      const transaction = await withdraw(vault, value)
+      const transaction = await withdraw(vault, value, useMax)
 
       setValue('')
+      setUseMax(false)
       setIsPending(false)
       dispatch(dropNotificationGroup('withdraws'))
       dispatch(withdrawSent(chainId, transaction.hash))
@@ -63,6 +60,21 @@ const Withdraw = ({ vault }) => {
       dispatch(dropNotificationGroup('withdraws'))
       dispatch(withdrawError(chainId, error))
     }
+  }
+
+  const onMax = event => {
+    event.preventDefault()
+
+    setValue(
+      toNumber(toHuman(deposited, vault.decimals), { precision: vault.decimals.toNumber() })
+    )
+
+    setUseMax(true)
+  }
+
+  const onChange = ({ target }) => {
+    setValue(target.value)
+    setUseMax(false)
   }
 
   return (
@@ -130,8 +142,12 @@ const nativeAmount = (vault, amount) => {
   return toNative(shares, decimals)
 }
 
-const withdraw = async (vault, amount) => {
-  const amountNative = nativeAmount(vault, amount)
+const withdraw = async (vault, amount, useMax) => {
+  if (useMax) {
+    return await vault.withdrawAll()
+  } else {
+    const amountNative = nativeAmount(vault, amount)
 
-  return await vault.withdraw(amountNative)
+    return await vault.withdraw(amountNative)
+  }
 }

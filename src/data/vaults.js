@@ -31,10 +31,13 @@ const parseVault = async (vault, data) => {
     balance:       extra && await extra.balance(),
     allowance:     extra && await extra.allowance(),
     sharePrice:    extra && await extra.pricePerFullShare(),
+    shares:        extra && await extra.shares(),
     deposited:     extra && await deposited(extra),
     deposit:       extra?.deposit?.bind(extra),
+    depositAll:    extra?.depositAll?.bind(extra),
     approve:       extra?.approve?.bind(extra),
     withdraw:      extra?.withdraw?.bind(extra),
+    withdrawAll:   extra?.withdrawAll?.bind(extra),
     network,
     protocol,
     token
