@@ -50,9 +50,10 @@ const Deposit = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
-      onUpdate(wallet, dispatch)
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveSuccess(chainId, receipt.transactionHash))
+      // Since TwoPi lib refresh data every 2 seconds:
+      setTimeout(() => { onUpdate(wallet, dispatch) }, 3 * 1000)
     } catch (error) {
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveError(chainId, error))
@@ -84,9 +85,10 @@ const Deposit = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
-      onUpdate(wallet, dispatch)
       dispatch(dropNotificationGroup('deposits'))
       dispatch(depositSuccess(chainId, receipt.transactionHash))
+      // Since TwoPi lib refresh data every 2 seconds:
+      setTimeout(() => { onUpdate(wallet, dispatch) }, 3 * 1000)
     } catch (error) {
       setIsPending(false)
       dispatch(dropNotificationGroup('deposits'))
@@ -125,7 +127,10 @@ const Deposit = ({ vault }) => {
                          error={!!error}
                          fullWidth
                          sx={{ py: 0.5 }} />
-          <FormHelperText id="deposited-error-text">{error}</FormHelperText>
+          <FormHelperText id="balance-error-text">{error}</FormHelperText>
+          <FormHelperText id="balance-helper-text" sx={{ mr: 0, textAlign: 'right' }}>
+            Deposit fee ~0.005%
+          </FormHelperText>
         </FormControl>
       </Box>
 

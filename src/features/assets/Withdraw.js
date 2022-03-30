@@ -54,9 +54,10 @@ const Withdraw = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
-      onUpdate(wallet, dispatch)
       dispatch(dropNotificationGroup('withdraws'))
       dispatch(withdrawSuccess(chainId, receipt.transactionHash))
+      // Since TwoPi lib refresh data every 2 seconds:
+      setTimeout(() => { onUpdate(wallet, dispatch) }, 3 * 1000)
     } catch (error) {
       setIsPending(false)
       dispatch(dropNotificationGroup('withdraws'))
@@ -97,6 +98,9 @@ const Withdraw = ({ vault }) => {
                          fullWidth
                          sx={{ py: 0.5 }} />
           <FormHelperText id="deposited-error-text">{error}</FormHelperText>
+          <FormHelperText id="deposited-helper-text" sx={{ mr: 0, textAlign: 'right' }}>
+            Withdrawal fee 0.1%
+          </FormHelperText>
         </FormControl>
       </Box>
 
