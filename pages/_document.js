@@ -4,8 +4,6 @@ const Document = () => {
   return (
     <Html>
       <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
         <meta property="og:local" content="en_US" />
         <meta property="og:title" content="2PI Demo" />
         <meta property="og:description" content="2PI Demo" />

@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Contract } from 'ethers'
+import archimedesAbi from '@/data/abis/archimedes'
 import { toNumber } from '@/lib/locales'
 import { toBigNumber, toHuman, toNative } from '@/lib/math'
 import { onUpdate } from '@/features/assets/utils/vaults'
@@ -42,7 +44,7 @@ const Withdraw = ({ vault }) => {
     setIsPending(true)
 
     try {
-      const transaction = await withdraw(vault, value, useMax)
+      const transaction = await withdraw(wallet, vault, value, useMax)
 
       setValue('')
       setUseMax(false)
@@ -142,12 +144,20 @@ const nativeAmount = (vault, amount) => {
   return toNative(shares, decimals)
 }
 
-const withdraw = async (vault, amount, useMax) => {
+const withdraw = async (wallet, vault, amount, useMax) => {
+  const contract  = new Contract(vault.contract, archimedesAbi, wallet.provider)
+  const overrides = { from: wallet.address }
+
   if (useMax) {
-    return await vault.withdrawAll()
+    const gas = await contract.estimateGas.withdrawAll(vault.pid, overrides)
+
+    return await vault.withdrawAll({ gasLimit: gas.mul(2) })
   } else {
     const amountNative = nativeAmount(vault, amount)
+    const gas          = await contract.estimateGas.withdraw(
+      vault.pid, amountNative, overrides
+    )
 
-    return await vault.withdraw(amountNative)
+    return await vault.withdraw(amountNative, { gasLimit: gas.mul(2) })
   }
 }

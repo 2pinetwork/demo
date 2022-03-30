@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@2pi-network/js-sdk@^0.2.0-beta.30":
-  version "0.2.0-beta.30"
-  resolved "https://registry.yarnpkg.com/@2pi-network/js-sdk/-/js-sdk-0.2.0-beta.30.tgz#1890f1f4447a2ce065652c60afd5deae4bca9f6c"
-  integrity sha512-kit6Y/wiU3liNjC+T/JWZtVKI0R8RwnaSnH4SL0lljEsF/Rn5rTkS9IolRG0yDQCmiPkrkevPJNaEz0GF8cxIQ==
+"@2pi-network/js-sdk@^0.2.0-beta.31":
+  version "0.2.0-beta.31"
+  resolved "https://registry.yarnpkg.com/@2pi-network/js-sdk/-/js-sdk-0.2.0-beta.31.tgz#7df966400a885a1e6f894e42ad8663f020686c03"
+  integrity sha512-SgN3d81HqfNbgGiAv2iwV1uA1a68un74JCbuA3Q9qIwG0Fqs3fbw2acMM3sFTpvYLU195yRCv02A+1Oo8EuGPA==
   dependencies:
     axios "^0.26.1"
     bignumber.js "^9.0.2"
@@ -2822,9 +2822,9 @@ ecc-jsbn@~0.1.1:
     safer-buffer "^2.1.0"
 
 electron-to-chromium@^1.4.84:
-  version "1.4.99"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.99.tgz#da97e2c116dc6de2f91a81b4ff8d1b19bf54dc1f"
-  integrity sha512-YXMzbvlo6pW12KWw0bj6cIGCJi1Moy8PLCuuzgRzg6WYIcHILK3szU+HHnHFx2b373qRv+cfmHhbmRbatyAbPA==
+  version "1.4.101"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.101.tgz#71f3a10065146d7445ba5d4c06ba2cc063b0817a"
+  integrity sha512-XJH+XmJjACx1S7ASl/b//KePcda5ocPnFH2jErztXcIS8LpP0SE6rX8ZxiY5/RaDPnaF1rj0fPaHfppzb0e2Aw==
 
 elliptic@6.5.4, elliptic@^6.5.2, elliptic@^6.5.4:
   version "6.5.4"

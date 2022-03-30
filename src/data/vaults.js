@@ -20,6 +20,7 @@ const parseVault = async (vault, data) => {
 
   return {
     identifier:    vault.identifier,
+    pid:           vault.pid,
     tokenPrice:    Number(vault.token_price),
     apy:           Number(vault.apy),
     tvl:           toHuman(vault.tvl, +vault.token_decimals),

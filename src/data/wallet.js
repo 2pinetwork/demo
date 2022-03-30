@@ -5,7 +5,7 @@ import { addressChanged, chainChanged } from '@/store'
 export const createSession = async dispatch => {
   const modal          = createWalletModal()
   const walletProvider = await modal.requestProvider()
-  const ethersProvider = new Web3Provider(walletProvider, 'any')
+  const ethersProvider = new Web3Provider(walletProvider)
   const [ address ]    = await ethersProvider.listAccounts()
   const { chainId }    = await ethersProvider.getNetwork()
 

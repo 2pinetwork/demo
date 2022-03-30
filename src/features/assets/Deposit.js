@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Contract } from 'ethers'
+import archimedesAbi from '@/data/abis/archimedes'
 import { toNumber } from '@/lib/locales'
 import { toBigNumber, toHuman, toNative } from '@/lib/math'
 import { onUpdate } from '@/features/assets/utils/vaults'
@@ -16,6 +18,9 @@ import {
   OutlinedInput,
   Typography
 } from '@mui/material'
+
+
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 const Deposit = ({ vault }) => {
   const [ { wallet }, dispatch ]    = useStore()
@@ -68,8 +73,8 @@ const Deposit = ({ vault }) => {
     setIsPending(true)
 
     try {
-      const referral    = localStorage.getItem('referral')
-      const transaction = await deposit(vault, value, referral, useMax)
+      const referral    = localStorage.getItem('referral') || ZERO_ADDRESS
+      const transaction = await deposit(wallet, vault, value, referral, useMax)
 
       setValue('')
       setUseMax(false)
@@ -204,12 +209,22 @@ const approve = async (vault, amount) => {
   return await vault.approve(amountNative)
 }
 
-const deposit = async (vault, amount, referral, useMax) => {
+const deposit = async (wallet, vault, amount, referral, useMax) => {
+  const contract  = new Contract(vault.contract, archimedesAbi, wallet.provider)
+  const overrides = { from: wallet.address }
+
   if (useMax) {
-    return await vault.depositAll(referral)
+    const gas = await contract.estimateGas.depositAll(
+      vault.pid, referral, overrides
+    )
+
+    return await vault.depositAll(referral, { gasLimit: gas.mul(2) })
   } else {
     const amountNative = nativeAmount(vault, amount)
+    const gas          = await contract.estimateGas.deposit(
+      vault.pid, amountNative, referral, overrides
+    )
 
-    return await vault.deposit(amountNative, referral)
+    return await vault.deposit(amountNative, referral, { gasLimit: gas.mul(2) })
   }
 }
