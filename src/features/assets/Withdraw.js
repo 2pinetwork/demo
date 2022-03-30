@@ -8,6 +8,7 @@ import { onUpdate } from '@/features/assets/utils/vaults'
 import { dropNotificationGroup, useStore } from '@/store'
 import { txSent, txSuccess, txError } from '@/utils/transactions'
 import { validateWithdraw } from '@/utils/validations'
+import { suggestedGasPrice } from '@/utils/gas'
 import Max from './Max'
 import {
   Box,
@@ -150,18 +151,22 @@ const nativeAmount = (vault, amount) => {
 
 const withdraw = async (wallet, vault, amount, useMax) => {
   const contract  = new Contract(vault.contract, archimedesAbi, wallet.provider)
-  const overrides = { from: wallet.address }
+  const gasPrice  = await suggestedGasPrice()
+  const overrides = { from: wallet.address, gasPrice }
 
   if (useMax) {
     const gas = await contract.estimateGas.withdrawAll(vault.pid, overrides)
 
-    return await vault.withdrawAll({ gasLimit: gas.mul(2) })
+    return await vault.withdrawAll({ gasLimit: gas.mul(2), gasPrice })
   } else {
     const amountNative = nativeAmount(vault, amount)
     const gas          = await contract.estimateGas.withdraw(
       vault.pid, amountNative, overrides
     )
 
-    return await vault.withdraw(amountNative, { gasLimit: gas.mul(2) })
+    return await vault.withdraw(amountNative, {
+      gasLimit: gas.mul(2),
+      gasPrice
+    })
   }
 }

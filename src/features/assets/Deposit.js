@@ -9,6 +9,7 @@ import { dropNotificationGroup, useStore } from '@/store'
 import { notifySuccess } from '@/store/notifications'
 import { txSent, txSuccess, txError } from '@/utils/transactions'
 import { isNumber, validateDeposit } from '@/utils/validations'
+import { suggestedGasPrice } from '@/utils/gas'
 import Max from './Max'
 import {
   Box,
@@ -209,27 +210,32 @@ const nativeAmount = (vault, amount) => {
 }
 
 const approve = async (vault, amount) => {
+  const gasPrice     = await suggestedGasPrice()
   const amountNative = nativeAmount(vault, amount)
 
-  return await vault.approve(amountNative)
+  return await vault.approve(amountNative, { gasPrice })
 }
 
 const deposit = async (wallet, vault, amount, referral, useMax) => {
   const contract  = new Contract(vault.contract, archimedesAbi, wallet.provider)
-  const overrides = { from: wallet.address }
+  const gasPrice  = await suggestedGasPrice()
+  const overrides = { from: wallet.address, gasPrice }
 
   if (useMax) {
     const gas = await contract.estimateGas.depositAll(
       vault.pid, referral, overrides
     )
 
-    return await vault.depositAll(referral, { gasLimit: gas.mul(2) })
+    return await vault.depositAll(referral, { gasLimit: gas.mul(2), gasPrice })
   } else {
     const amountNative = nativeAmount(vault, amount)
     const gas          = await contract.estimateGas.deposit(
       vault.pid, amountNative, referral, overrides
     )
 
-    return await vault.deposit(amountNative, referral, { gasLimit: gas.mul(2) })
+    return await vault.deposit(amountNative, referral, {
+      gasLimit: gas.mul(2),
+      gasPrice
+    })
   }
 }
