@@ -54,7 +54,7 @@ const Deposit = ({ vault }) => {
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveSuccess(chainId, receipt.transactionHash))
       // Since TwoPi lib refresh data every 2 seconds:
-      setTimeout(() => { onUpdate(wallet, dispatch) }, 3 * 1000)
+      setTimeout(() => { onUpdate(wallet, dispatch) }, 5 * 1000)
     } catch (error) {
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveError(chainId, error))
