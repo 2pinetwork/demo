@@ -32,7 +32,6 @@ export const useVaults = () => {
   return vaults?.value
 }
 
-
 export const onUpdate = (wallet, dispatch) => {
   const order = Date.now()
 

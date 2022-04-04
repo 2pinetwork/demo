@@ -130,7 +130,7 @@ const Deposit = ({ vault }) => {
                          sx={{ py: 0.5 }} />
           <FormHelperText id="balance-error-text">{error}</FormHelperText>
           <FormHelperText id="balance-helper-text" sx={{ mr: 0, textAlign: 'right' }}>
-            Deposit fee ~0.005%
+            {vault.depositFeeLabel}
           </FormHelperText>
         </FormControl>
       </Box>

@@ -3,9 +3,27 @@ import { get } from '@/lib/client'
 import { toHuman } from '@/lib/math'
 import { getVaults as protocolVaults } from '@/lib/protocol'
 
+const only = [
+  'polygon_mstable_usdc',
+  'polygon_quickswap_usdc'
+]
+
+// This should be moved elsewhere, but well...
+const info = {
+  'polygon_mstable_usdc': {
+    depositFeeLabel:    'Deposit fee ~0.005%',
+    withdrawalFeeLabel: 'Withdrawal fee 0.1%',
+    infoLabel:          'imUSD is insured. Funds inside mStable protocol are covered by Nexus Mutual.'
+  },
+  'polygon_quickswap_usdc': {
+    depositFeeLabel:    'Deposit fee ~0.8% due to LP creation / staking',
+    withdrawalFeeLabel: 'Withdrawal fee 0.1% + 0.8% LP conversion / unstaking'
+  }
+}
+
 export const getVaults = async wallet => {
-  const response   = await get(`/v1/vaults/polygon_mstable_usdc`)
-  const vaults     = Array(response).filter(i => i)
+  const response   = await get('/v1/vaults' + query())
+  const vaults     = (response.data || []).filter(v => only.includes(v.identifier))
   const vaultsData = wallet && await protocolVaults(wallet.chainId, wallet)
 
   return await Promise.all(
@@ -13,12 +31,17 @@ export const getVaults = async wallet => {
   )
 }
 
+const query = () => {
+  const params = ['only[]=polygon']
+
+  return `?${params.join('&')}`
+}
+
 const parseVault = async (vault, data) => {
   const [ network, protocol, token ] = getInfo(vault)
   const id                           = [network, token, protocol].join('-')
   const extra                        = data && data.find(data => data.id === id)
-
-  return {
+  const result                       = {
     identifier:    vault.identifier,
     pid:           vault.pid,
     tokenPrice:    Number(vault.token_price),
@@ -43,6 +66,8 @@ const parseVault = async (vault, data) => {
     protocol,
     token
   }
+
+  return { ...result, ...info[result.identifier] }
 }
 
 const deposited = async extra => {

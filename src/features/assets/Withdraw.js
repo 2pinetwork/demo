@@ -100,7 +100,7 @@ const Withdraw = ({ vault }) => {
                          sx={{ py: 0.5 }} />
           <FormHelperText id="deposited-error-text">{error}</FormHelperText>
           <FormHelperText id="deposited-helper-text" sx={{ mr: 0, textAlign: 'right' }}>
-            Withdrawal fee 0.1%
+            {vault.withdrawalFeeLabel}
           </FormHelperText>
         </FormControl>
       </Box>
