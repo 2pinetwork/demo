@@ -213,7 +213,7 @@ const approve = async (vault, amount) => {
   const gasPrice     = await suggestedGasPrice()
   const amountNative = nativeAmount(vault, amount)
 
-  return await vault.approve(amountNative, { gasPrice })
+  return await vault.approve(amountNative, { gasPrice, gasLimit: 21000 })
 }
 
 const deposit = async (wallet, vault, amount, referral, useMax) => {
