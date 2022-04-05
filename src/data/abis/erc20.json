@@ -1,0 +1,26 @@
+[
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs":[
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "name": "approve",
+    "inputs":[
+      {
+        "type": "address",
+        "name": "spender",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      }
+    ]
+  }
+]

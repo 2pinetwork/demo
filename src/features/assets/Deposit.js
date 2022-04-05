@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Contract } from 'ethers'
 import archimedesAbi from '@/data/abis/archimedes'
+import erc20abi from '@/data/abis/erc20'
 import { toNumber } from '@/lib/locales'
 import { toBigNumber, toHuman, toNative } from '@/lib/math'
 import { onUpdate } from '@/features/assets/utils/vaults'
@@ -44,7 +45,7 @@ const Deposit = ({ vault }) => {
     setIsPending(true)
 
     try {
-      const transaction = await approve(vault, 1e58)
+      const transaction = await approve(wallet, vault, 1 + '0'.repeat(58))
 
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveSent(chainId, transaction.hash))
@@ -209,11 +210,18 @@ const nativeAmount = (vault, amount) => {
   return toNative(amount, tokenDecimals)
 }
 
-const approve = async (vault, amount) => {
+const approve = async (wallet, vault, amount) => {
+  const contract     = new Contract(vault.tokenContract, erc20abi, wallet.provider)
   const gasPrice     = await suggestedGasPrice()
   const amountNative = nativeAmount(vault, amount)
+  const gas          = await contract.estimateGas.approve(
+    vault.contract, amountNative, { from: wallet.address }
+  )
 
-  return await vault.approve(amountNative, { gasPrice, gasLimit: 21000 })
+  return await vault.approve(amountNative, {
+    gasLimit: (gas.toNumber() * 1.2).toFixed(),
+    gasPrice
+  })
 }
 
 const deposit = async (wallet, vault, amount, referral, useMax) => {
@@ -226,7 +234,10 @@ const deposit = async (wallet, vault, amount, referral, useMax) => {
       vault.pid, referral, overrides
     )
 
-    return await vault.depositAll(referral, { gasLimit: gas.mul(2), gasPrice })
+    return await vault.depositAll(referral, {
+      gasPrice,
+      gasLimit: (gas.toNumber() * 1.2).toFixed()
+    })
   } else {
     const amountNative = nativeAmount(vault, amount)
     const gas          = await contract.estimateGas.deposit(
@@ -234,7 +245,7 @@ const deposit = async (wallet, vault, amount, referral, useMax) => {
     )
 
     return await vault.deposit(amountNative, referral, {
-      gasLimit: gas.mul(2),
+      gasLimit: (gas.toNumber() * 1.2).toFixed(),
       gasPrice
     })
   }
