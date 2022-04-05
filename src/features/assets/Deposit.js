@@ -211,42 +211,58 @@ const nativeAmount = (vault, amount) => {
 }
 
 const approve = async (wallet, vault, amount) => {
-  const contract     = new Contract(vault.tokenContract, erc20abi, wallet.provider)
-  const gasPrice     = await suggestedGasPrice()
   const amountNative = nativeAmount(vault, amount)
-  const gas          = await contract.estimateGas.approve(
-    vault.contract, amountNative, { from: wallet.address }
-  )
 
-  return await vault.approve(amountNative, {
-    gasLimit: (gas.toNumber() * 1.2).toFixed(),
-    gasPrice
-  })
+  try {
+    const contract = new Contract(vault.tokenContract, erc20abi, wallet.provider)
+    const gasPrice = await suggestedGasPrice()
+    const gas      = await contract.estimateGas.approve(
+      vault.contract, amountNative, { from: wallet.address }
+    )
+
+    return await vault.approve(amountNative, {
+      gasLimit: (gas.toNumber() * 1.2).toFixed(),
+      gasPrice
+    })
+  } catch {
+    // If estimates fail, we do it anyway with no guesses =)
+    return await vault.approve(amountNative)
+  }
 }
 
 const deposit = async (wallet, vault, amount, referral, useMax) => {
-  const contract  = new Contract(vault.contract, archimedesAbi, wallet.provider)
-  const gasPrice  = await suggestedGasPrice()
-  const overrides = { from: wallet.address, gasPrice }
-
   if (useMax) {
-    const gas = await contract.estimateGas.depositAll(
-      vault.pid, referral, overrides
-    )
+    try {
+      const contract  = new Contract(vault.contract, archimedesAbi, wallet.provider)
+      const gasPrice  = await suggestedGasPrice()
+      const overrides = { from: wallet.address, gasPrice }
+      const gas       = await contract.estimateGas.depositAll(
+        vault.pid, referral, overrides
+      )
 
-    return await vault.depositAll(referral, {
-      gasPrice,
-      gasLimit: (gas.toNumber() * 1.2).toFixed()
-    })
+      return await vault.depositAll(referral, {
+        gasPrice,
+        gasLimit: (gas.toNumber() * 1.2).toFixed()
+      })
+    } catch {
+      // If estimates fail, we do it anyway with no guesses =)
+      return await vault.depositAll(referral)
+    }
   } else {
     const amountNative = nativeAmount(vault, amount)
-    // const gas          = await contract.estimateGas.deposit(
-    //   vault.pid, amountNative, referral, overrides
-    // )
 
-    return await vault.deposit(amountNative, referral, {
-      // gasLimit: (gas.toNumber() * 1.2).toFixed(),
-      // gasPrice
-    })
+    try {
+      const gas = await contract.estimateGas.deposit(
+        vault.pid, amountNative, referral, overrides
+      )
+
+      return await vault.deposit(amountNative, referral, {
+        gasLimit: (gas.toNumber() * 1.2).toFixed(),
+        gasPrice
+      })
+    } catch {
+      // If estimates fail, we do it anyway with no guesses =)
+      return await vault.deposit(amountNative, referral)
+    }
   }
 }

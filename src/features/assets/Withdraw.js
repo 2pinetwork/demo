@@ -155,18 +155,32 @@ const withdraw = async (wallet, vault, amount, useMax) => {
   const overrides = { from: wallet.address, gasPrice }
 
   if (useMax) {
-    const gas = await contract.estimateGas.withdrawAll(vault.pid, overrides)
+    try {
+      const gas = await contract.estimateGas.withdrawAll(vault.pid, overrides)
 
-    return await vault.withdrawAll({ gasLimit: gas.mul(2), gasPrice })
+      return await vault.withdrawAll({
+        gasPrice,
+        gasLimit: (gas.toNumber() * 1.2).toFixed()
+      })
+    } catch {
+      // If estimates fail, we do it anyway with no guesses =)
+      return await vault.withdrawAll()
+    }
   } else {
     const amountNative = nativeAmount(vault, amount)
-    const gas          = await contract.estimateGas.withdraw(
-      vault.pid, amountNative, overrides
-    )
 
-    return await vault.withdraw(amountNative, {
-      gasLimit: gas.mul(2),
-      gasPrice
-    })
+    try {
+      const gas = await contract.estimateGas.withdraw(
+        vault.pid, amountNative, overrides
+      )
+
+      return await vault.withdraw(amountNative, {
+        gasLimit: (gas.toNumber() * 1.2).toFixed(),
+        gasPrice
+      })
+    } catch {
+      // If estimates fail, we do it anyway with no guesses =)
+      return await vault.withdraw(amountNative)
+    }
   }
 }
