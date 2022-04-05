@@ -240,13 +240,13 @@ const deposit = async (wallet, vault, amount, referral, useMax) => {
     })
   } else {
     const amountNative = nativeAmount(vault, amount)
-    const gas          = await contract.estimateGas.deposit(
-      vault.pid, amountNative, referral, overrides
-    )
+    // const gas          = await contract.estimateGas.deposit(
+    //   vault.pid, amountNative, referral, overrides
+    // )
 
     return await vault.deposit(amountNative, referral, {
-      gasLimit: (gas.toNumber() * 1.2).toFixed(),
-      gasPrice
+      // gasLimit: (gas.toNumber() * 1.2).toFixed(),
+      // gasPrice
     })
   }
 }
