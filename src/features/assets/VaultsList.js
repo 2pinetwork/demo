@@ -52,32 +52,32 @@ VaultRow.propTypes = {
 const VaultsRowSkeleton = () => (
   <Card sx={{ mb: 3 }}>
     <Grid container spacing={1}>
-      <Grid item xs>
-        <Typography><Skeleton /></Typography>
+      <Grid item xs={6} md>
+        <Typography><Skeleton height={72} /></Typography>
       </Grid>
-      <Grid item xs>
-        <Typography><Skeleton /></Typography>
+      <Grid item xs={6} md>
+        <Typography><Skeleton height={72} /></Typography>
       </Grid>
-      <Grid item xs>
-        <Typography><Skeleton /></Typography>
+      <Grid item xs={6} md>
+        <Typography><Skeleton height={72} /></Typography>
       </Grid>
-      <Grid item xs>
-        <Typography><Skeleton /></Typography>
+      <Grid item xs={6} md>
+        <Typography><Skeleton height={72} /></Typography>
       </Grid>
-      <Grid item xs>
-        <Typography><Skeleton /></Typography>
+      <Grid item xs={6} md>
+        <Typography><Skeleton height={72} /></Typography>
       </Grid>
-      <Grid item xs>
-        <Typography><Skeleton /></Typography>
+      <Grid item xs={6} md>
+        <Typography><Skeleton height={72} /></Typography>
       </Grid>
     </Grid>
 
-    <Grid container spacing={3} sx={{ mt: 2 }}>
-      <Grid item xs>
-        <Typography><Skeleton /></Typography>
+    <Grid container spacing={3}>
+      <Grid item xs={12} sm={12} md={6}>
+        <Typography><Skeleton height={195} /></Typography>
       </Grid>
-      <Grid item xs>
-        <Typography><Skeleton /></Typography>
+      <Grid item xs={12} sm={12} md={6}>
+        <Typography><Skeleton height={195} /></Typography>
       </Grid>
     </Grid>
   </Card>
