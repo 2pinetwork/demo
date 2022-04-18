@@ -49,7 +49,6 @@ const Withdraw = ({ vault }) => {
 
       setValue('')
       setUseMax(false)
-      setIsPending(false)
       dispatch(dropNotificationGroup('withdraws'))
       dispatch(withdrawSent(chainId, transaction.hash))
 
@@ -58,11 +57,12 @@ const Withdraw = ({ vault }) => {
       dispatch(dropNotificationGroup('withdraws'))
       dispatch(withdrawSuccess(chainId, receipt.transactionHash))
       // Since TwoPi lib refresh data every 2 seconds:
-      setTimeout(() => { onUpdate(wallet, dispatch) }, 3 * 1000)
+      setTimeout(() => { onUpdate(wallet, dispatch) }, 5 * 1000)
     } catch (error) {
-      setIsPending(false)
       dispatch(dropNotificationGroup('withdraws'))
       dispatch(withdrawError(chainId, error))
+    } finally {
+      setIsPending(false)
     }
   }
 
@@ -88,14 +88,14 @@ const Withdraw = ({ vault }) => {
       </Typography>
 
       <Box component="div" sx={{ mt: 2 }}>
-        <FormControl error={!!error} variant="outlined" fullWidth>
+        <FormControl error={!! error} variant="outlined" fullWidth>
           <OutlinedInput id="deposited"
                          value={value}
                          size="small"
                          endAdornment={<Max onClick={onMax} />}
                          disabled={isDisabled}
                          onChange={onChange}
-                         error={!!error}
+                         error={!! error}
                          fullWidth
                          sx={{ py: 0.5 }} />
           <FormHelperText id="deposited-error-text">{error}</FormHelperText>
@@ -160,7 +160,7 @@ const withdraw = async (wallet, vault, amount, useMax) => {
 
       return await vault.withdrawAll({
         gasPrice,
-        gasLimit: (gas.toNumber() * 1.2).toFixed()
+        gasLimit: (gas.toNumber() * 1.5).toFixed()
       })
     } catch {
       // If estimates fail, we do it anyway with no guesses =)
@@ -175,7 +175,7 @@ const withdraw = async (wallet, vault, amount, useMax) => {
       )
 
       return await vault.withdraw(amountNative, {
-        gasLimit: (gas.toNumber() * 1.2).toFixed(),
+        gasLimit: (gas.toNumber() * 1.5).toFixed(),
         gasPrice
       })
     } catch {

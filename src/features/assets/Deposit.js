@@ -52,15 +52,18 @@ const Deposit = ({ vault }) => {
 
       const receipt = await transaction.wait()
 
-      dispatch(dropNotificationGroup('deposits'))
-      dispatch(approveSuccess(chainId, receipt.transactionHash))
       // Since TwoPi lib refresh data every 2 seconds:
-      setTimeout(() => { onUpdate(wallet, dispatch) }, 5 * 1000)
-    } catch (error) {
+      setTimeout(() => {
+        dispatch(dropNotificationGroup('deposits'))
+        dispatch(approveSuccess(chainId, receipt.transactionHash))
+
+        onUpdate(wallet, dispatch)
+      }, 5 * 1000)
+    } catch {
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveError(chainId, error))
     } finally {
-      setIsPending(false)
+      setTimeout(() => { setIsPending(false) }, 5 * 1000)
     }
   }
 
@@ -81,20 +84,23 @@ const Deposit = ({ vault }) => {
 
       setValue('')
       setUseMax(false)
-      setIsPending(false)
       dispatch(dropNotificationGroup('deposits'))
       dispatch(depositSent(chainId, transaction.hash))
 
       const receipt = await transaction.wait()
 
-      dispatch(dropNotificationGroup('deposits'))
-      dispatch(depositSuccess(chainId, receipt.transactionHash))
       // Since TwoPi lib refresh data every 2 seconds:
-      setTimeout(() => { onUpdate(wallet, dispatch) }, 3 * 1000)
-    } catch (error) {
-      setIsPending(false)
+      setTimeout(() => {
+        dispatch(dropNotificationGroup('deposits'))
+        dispatch(depositSuccess(chainId, receipt.transactionHash))
+
+        onUpdate(wallet, dispatch)
+      }, 5 * 1000)
+    } catch {
       dispatch(dropNotificationGroup('deposits'))
       dispatch(depositError(chainId, error))
+    } finally {
+      setTimeout(() => { setIsPending(false) }, 5 * 1000)
     }
   }
 
@@ -119,14 +125,14 @@ const Deposit = ({ vault }) => {
       </Typography>
 
       <Box component="div" sx={{ mt: 2 }}>
-        <FormControl error={!!error} variant="outlined" fullWidth>
+        <FormControl error={!! error} variant="outlined" fullWidth>
           <OutlinedInput id="balance"
                          value={value}
                          size="small"
                          endAdornment={<Max onClick={onMax} />}
                          disabled={isDisabled}
                          onChange={onChange}
-                         error={!!error}
+                         error={!! error}
                          fullWidth
                          sx={{ py: 0.5 }} />
           <FormHelperText id="balance-error-text">{error}</FormHelperText>
@@ -221,7 +227,7 @@ const approve = async (wallet, vault, amount) => {
     )
 
     return await vault.approve(amountNative, {
-      gasLimit: (gas.toNumber() * 1.2).toFixed(),
+      gasLimit: (gas.toNumber() * 1.5).toFixed(),
       gasPrice
     })
   } catch {
@@ -231,18 +237,19 @@ const approve = async (wallet, vault, amount) => {
 }
 
 const deposit = async (wallet, vault, amount, referral, useMax) => {
+  const contract  = new Contract(vault.contract, archimedesAbi, wallet.provider)
+  const gasPrice  = await suggestedGasPrice()
+  const overrides = { from: wallet.address, gasPrice }
+
   if (useMax) {
     try {
-      const contract  = new Contract(vault.contract, archimedesAbi, wallet.provider)
-      const gasPrice  = await suggestedGasPrice()
-      const overrides = { from: wallet.address, gasPrice }
       const gas       = await contract.estimateGas.depositAll(
         vault.pid, referral, overrides
       )
 
       return await vault.depositAll(referral, {
         gasPrice,
-        gasLimit: (gas.toNumber() * 1.2).toFixed()
+        gasLimit: (gas.toNumber() * 1.5).toFixed()
       })
     } catch {
       // If estimates fail, we do it anyway with no guesses =)
@@ -257,7 +264,7 @@ const deposit = async (wallet, vault, amount, referral, useMax) => {
       )
 
       return await vault.deposit(amountNative, referral, {
-        gasLimit: (gas.toNumber() * 1.2).toFixed(),
+        gasLimit: (gas.toNumber() * 1.5).toFixed(),
         gasPrice
       })
     } catch {

@@ -7,7 +7,6 @@ export const wait = delay => {
 export const callAndRetry = async (fn, depth = 0) => {
   try {
     return await fn()
-
   } catch (error) {
     if (depth > 2) throw error
 

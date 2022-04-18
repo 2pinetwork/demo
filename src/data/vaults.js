@@ -22,7 +22,7 @@ const info = {
 }
 
 export const getVaults = async wallet => {
-  const response   = await get('/v1/vaults' + query())
+  const response   = await get(`/v1/vaults${query()}`)
   const vaults     = (response.data || []).filter(v => only.includes(v.identifier))
   const vaultsData = wallet && await protocolVaults(wallet.chainId, wallet)
 
