@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { getVaults } from '@/data/vaults'
 import { loopWithBackOff } from '@/lib/function'
 import { dropNotificationGroup, useStore, vaultsLoaded } from '@/store'
@@ -6,27 +6,12 @@ import { notifyError } from '@/store/notifications'
 
 const FETCH_INTERVAL = 30 * 1000
 
-const useUpdateEffect = (callback, dependencies) => {
-  const initMount = useRef(true)
-
-  useEffect(() => {
-    if (initMount.current) {
-      initMount.current = false
-
-      return
-    }
-
-    return callback()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies)
-}
-
 // [TODO]
 // - Cache vaults
 export const useVaults = () => {
   const [ { wallet, vaults }, dispatch ] = useStore()
 
-  useUpdateEffect(() => {
+  useEffect(() => {
     const delay     = (wallet) ? FETCH_INTERVAL : FETCH_INTERVAL * 6
     const getData   = ()     => getVaults(wallet)
     const onSuccess = vaults => dispatch(vaultsLoaded(vaults, Date.now()))
@@ -39,7 +24,7 @@ export const useVaults = () => {
     return loopWithBackOff(getData, { delay, onSuccess, onError })
     // We don't want dispatch complains here =)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet])
+  }, [ wallet ])
 
   return vaults?.value
 }
