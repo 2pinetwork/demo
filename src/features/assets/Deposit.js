@@ -243,7 +243,7 @@ const deposit = async (wallet, vault, amount, referral, useMax) => {
 
   if (useMax) {
     try {
-      const gas       = await contract.estimateGas.depositAll(
+      const gas = await contract.estimateGas.depositAll(
         vault.pid, referral, overrides
       )
 

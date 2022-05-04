@@ -13,11 +13,13 @@ const info = {
   'polygon_mstable_usdc': {
     depositFeeLabel:    'Deposit fee ~0.005%',
     withdrawalFeeLabel: 'Withdrawal fee 0.1%',
-    infoLabel:          'imUSD is insured. Funds inside mStable protocol are covered by Nexus Mutual.'
+    infoLabel:          'imUSD is insured. Funds inside mStable protocol are covered by Nexus Mutual.',
+    showWhenZeroShares: true
   },
   'polygon_quickswap_usdc': {
     depositFeeLabel:    'Deposit fee ~0.8% due to LP creation / staking',
-    withdrawalFeeLabel: 'Withdrawal fee 0.1% + 0.8% LP conversion / unstaking'
+    withdrawalFeeLabel: 'Withdrawal fee 0.1% + 0.8% LP conversion / unstaking',
+    showWhenZeroShares: false
   }
 }
 
@@ -25,10 +27,11 @@ export const getVaults = async wallet => {
   const response   = await get(`/v1/vaults${query()}`)
   const vaults     = (response.data || []).filter(v => only.includes(v.identifier))
   const vaultsData = wallet && await protocolVaults(wallet.chainId, wallet)
-
-  return await Promise.all(
+  const result     = await Promise.all(
     vaults.map(vault => parseVault(vault, vaultsData))
   )
+
+  return result.filter(v => v.showWhenZeroShares || v.shares?.gt(0))
 }
 
 const query = () => {
