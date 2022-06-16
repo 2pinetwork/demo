@@ -107,7 +107,7 @@ const Deposit = ({ vault }) => {
   const onMax = event => {
     event.preventDefault()
 
-    setValue(toNumber(toHuman(balance, vault.tokenDecimals), { precision: vault.tokenDecimals }))
+    setValue(toHuman(balance, vault.tokenDecimals).toFixed(vault.tokenDecimals))
     setUseMax(true)
   }
 

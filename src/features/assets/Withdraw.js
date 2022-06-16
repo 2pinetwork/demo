@@ -70,7 +70,7 @@ const Withdraw = ({ vault }) => {
     event.preventDefault()
 
     setValue(
-      toNumber(toHuman(deposited, vault.decimals), { precision: vault.decimals.toNumber() })
+      toHuman(deposited, vault.decimals).toFixed(vault.decimals)
     )
 
     setUseMax(true)
