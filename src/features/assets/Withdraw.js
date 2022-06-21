@@ -70,7 +70,7 @@ const Withdraw = ({ vault }) => {
     event.preventDefault()
 
     setValue(
-      toHuman(deposited, vault.decimals).toFixed(vault.decimals)
+      toHuman(deposited, vault.decimals).toFixed(vault.decimals.toNumber())
     )
 
     setUseMax(true)
@@ -144,7 +144,7 @@ const nativeAmount = (vault, amount) => {
   const { decimals, sharePrice } = vault
   const price                    = sharePrice.toString()
   const precision                = toBigNumber(10).pow(decimals.toString())
-  const shares                   = toBigNumber(amount).div(price).times(precision)
+  const shares                   = toBigNumber(amount).times(precision).div(price)
 
   return toNative(shares, decimals)
 }
