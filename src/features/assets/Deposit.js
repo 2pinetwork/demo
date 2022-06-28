@@ -59,7 +59,7 @@ const Deposit = ({ vault }) => {
 
         onUpdate(wallet, dispatch)
       }, 5 * 1000)
-    } catch {
+    } catch (error) {
       dispatch(dropNotificationGroup('deposits'))
       dispatch(approveError(chainId, error))
     } finally {
